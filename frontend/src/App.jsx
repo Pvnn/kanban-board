@@ -20,7 +20,7 @@ function App() {
 
   return (
     <>
-      <p>Welcome to TaskB app</p>
+      <p className='class="text-3xl font-bold underline'>Welcome to TaskB app</p>
       <p>Backend is {status}</p>
     </>
   )

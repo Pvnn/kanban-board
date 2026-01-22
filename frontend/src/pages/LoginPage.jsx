@@ -36,14 +36,14 @@ export const LoginPage = () => {
   };
 
   return (
-    <div className="min-h-screen flex justify-center bg-slate-100">
+    <div className="min-h-screen flex justify-center bg-white-100">
       <form
         onSubmit={submitForm}
-        className="my-auto bg-white p-8 flex flex-col gap-7 rounded-2xl"
+        className="my-auto bg-slate-100 p-8 flex flex-col gap-7 rounded-2xl"
       >
         <div>
           <p className="text-xl font-semibold text-center my-2">Welcome back</p>
-          <p className="text-gray-400 text-center">Sign into your account</p>
+          <p className="text-gray-600 text-center">Sign into your account</p>
         </div>
 
         <input

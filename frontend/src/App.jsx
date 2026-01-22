@@ -1,29 +1,24 @@
-import { useEffect, useState } from 'react'
-import axios from "axios"
-import './App.css'
+import { Routes, Route } from "react-router";
+import { LoginPage } from "./pages/LoginPage.jsx";
+import { ProtectedRute } from "./auth/ProtectedRoute.jsx";
+import { PublicRoute } from "./auth/PublicRoute.jsx";
+import { Dashboard } from "./pages/Dashboard.jsx";
+import "./App.css";
 
 function App() {
-  const [status, setStatus] = useState("");
-
-  useEffect(() => {
-    const checkHealth = async () => {
-      try {
-        await axios.get("http://127.0.0.1:5000/api/health");
-        setStatus("healthy");
-      } catch (err) {
-        console.error(err);
-        setStatus("unreachable");
-      }
-    }
-    checkHealth();
-  }, [])
-
   return (
-    <>
-      <p className='class="text-3xl font-bold underline'>Welcome to TaskB app</p>
-      <p>Backend is {status}</p>
-    </>
-  )
+    <Routes>
+      {/* Public routes */}
+      <Route element={<PublicRoute />}>
+        <Route path="/login" element={<LoginPage />} />
+      </Route>
+
+      {/* Protected routes */}
+      <Route element={<ProtectedRute />}>
+        <Route path="/" element={<Dashboard />} />
+      </Route>
+    </Routes>
+  );
 }
 
-export default App
+export default App;

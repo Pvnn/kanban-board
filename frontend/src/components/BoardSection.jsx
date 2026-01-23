@@ -1,0 +1,57 @@
+import { TaskCard } from "../components/TaskCard";
+import { Icon } from "../ui/Icon.jsx";
+
+export const BoardSection = ({ title, color, tasks }) => {
+  const colorStyles = {
+    gray: {
+      bg: "bg-gray-100/40",
+      pill: "bg-gray-200/40",
+      text: "text-gray-500/40",
+    },
+    cyan: {
+      bg: "bg-cyan-50/40",
+      pill: "bg-cyan-100/60",
+      text: "text-cyan-600",
+    },
+    purple: {
+      bg: "bg-purple-50/40",
+      pill: "bg-purple-100/60",
+      text: "text-purple-600",
+    },
+    green: {
+      bg: "bg-green-50/40",
+      pill: "bg-green-100/60",
+      text: "text-green-600",
+    },
+  };
+
+  const styles = colorStyles[color];
+
+  return (
+    <div className="h-150 w-80 flex flex-col p-3 m-5 items-center">
+      <div
+        className={`${styles.bg} w-80 py-1 m-5 px-3 rounded-lg flex gap-5 items-center`}
+      >
+        <div
+          className={`${styles.pill} font-semibold py-1 px-2 rounded-full text-sm text-gray-800`}
+        >
+          {title}
+        </div>
+        <div className={`${styles.text} text-sm`}>{tasks.length}</div>
+      </div>
+
+      <div className={`${styles.bg} h-150 w-80 rounded-lg`}>
+        {tasks.map((task) => (
+          <TaskCard
+            key={task.title}
+            icon={<Icon name={task.icon} />}
+            title={task.title}
+            postedBy={task.postedBy}
+            project={task.project}
+            postedOn={task.postedOn}
+          />
+        ))}
+      </div>
+    </div>
+  );
+};

@@ -9,19 +9,29 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(uuid())
-  email     String   @unique
-  password  String
-  tasks     Task[]
-  createdAt DateTime @default(now())
+  id            String   @id @default(uuid())
+  email         String   @unique
+  password      String
+  assignedTasks Task[]   @relation("AssignedTasks")
+  createdTasks  Task[]   @relation("CreatedTasks")
+  createdAt     DateTime @default(now())
 }
 
 model Task {
-  id          String   @id @default(uuid())
-  title       String
-  description String
-  status      String
-  assignedTo  User?    @relation(fields: [userId], references: [id])
-  createdAt   DateTime @default(now())
-  userId      String?
+  id               String     @id @default(uuid())
+  title            String
+  description      String
+  status           TaskStatus @default(TODO)
+  createdBy        User       @relation("CreatedTasks", fields: [createdByUserId], references: [id])
+  assignedTo       User?      @relation("AssignedTasks", fields: [assignedToUserId], references: [id])
+  createdAt        DateTime   @default(now())
+  assignedToUserId String?
+  createdByUserId  String
+}
+
+enum TaskStatus {
+  TODO
+  DEVELOPMENT
+  TESTING
+  DONE
 }

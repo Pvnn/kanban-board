@@ -1,7 +1,10 @@
+import { useState } from "react";
 import { TaskCard } from "../components/TaskCard";
 import { Icon } from "../ui/Icon.jsx";
+import { CreateTaskModal } from "./CreateTaskModal.jsx";
 
-export const BoardSection = ({ title, color, tasks }) => {
+export const BoardSection = ({ title, color, tasks, plus }) => {
+  const [isCreateTaskModalOpen, setIsCreateTaskModalOpen] = useState(false);
   const colorStyles = {
     gray: {
       bg: "bg-gray-100/40",
@@ -28,30 +31,49 @@ export const BoardSection = ({ title, color, tasks }) => {
   const styles = colorStyles[color];
 
   return (
-    <div className="h-150 w-80 flex flex-col p-3 m-5 items-center">
-      <div
-        className={`${styles.bg} w-80 py-1 m-5 px-3 rounded-lg flex gap-5 items-center`}
-      >
+    <>
+      <div className="h-150 w-80 flex flex-col p-3 m-5 items-center">
         <div
-          className={`${styles.pill} font-semibold py-1 px-2 rounded-full text-sm text-gray-800`}
+          className={`${styles.bg} w-80 py-1 m-5 px-3 rounded-lg flex justify-between items-center`}
         >
-          {title}
-        </div>
-        <div className={`${styles.text} text-sm`}>{tasks.length}</div>
-      </div>
+          <div className="flex items-center gap-5">
+            <div
+              className={`${styles.pill} font-semibold py-1 px-2 rounded-full text-sm text-gray-800`}
+            >
+              {title}
+            </div>
+            <div className={`${styles.text} text-sm`}>{tasks.length}</div>
+          </div>
 
-      <div className={`${styles.bg} h-150 w-80 rounded-lg`}>
-        {tasks.map((task) => (
-          <TaskCard
-            key={task.title}
-            icon={<Icon name={task.icon} />}
-            title={task.title}
-            postedBy={task.postedBy}
-            project={task.project}
-            postedOn={task.postedOn}
-          />
-        ))}
+          {plus && (
+            <div className="text text-end">
+              <button className="cursor-pointer" onClick={() => setIsCreateTaskModalOpen(true)}>
+                <Icon name="Plus" />
+              </button>
+            </div>
+          )}
+
+        </div>
+
+        <div className={`${styles.bg} h-150 w-80 rounded-lg`}>
+          {tasks.map((task) => (
+            <TaskCard
+              key={task.title}
+              icon={<Icon name={task.icon} />}
+              title={task.title}
+              postedBy={task.postedBy}
+              project={task.project}
+              postedOn={task.postedOn}
+            />
+          ))}
+        </div>
+
       </div>
-    </div>
+      {
+        isCreateTaskModalOpen && (
+          <CreateTaskModal setOpen={setIsCreateTaskModalOpen} />
+        )
+      }
+    </>
   );
 };

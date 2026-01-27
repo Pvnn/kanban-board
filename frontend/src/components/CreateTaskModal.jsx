@@ -1,10 +1,11 @@
 import { useState } from "react";
 import { Icon } from "../ui/Icon.jsx";
+import axios from "axios";
 
 const inputClass =
   "w-full rounded-xl bg-white border border-gray-200 px-3 py-2 text-sm text-gray-800 placeholder-gray-400 outline-none focus:border-gray-300 focus:ring-0 transition-colors";
 
-export const CreateTaskModal = ({ setOpen, projects = [] }) => {
+export const CreateTaskModal = ({ setOpen, projects = [], setTasks }) => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
 
@@ -13,16 +14,23 @@ export const CreateTaskModal = ({ setOpen, projects = [] }) => {
   const [projectName, setProjectName] = useState("");
   const [projectDescription, setProjectDescription] = useState("");
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     const payload = {
       title,
       description,
-      project: newProject
+      ...(newProject
         ? { projectName, projectDescription }
-        : { projectId },
+        : { projectId }),
     };
 
-    console.log(payload);
+    try {
+      const { data } = await axios.post('/api/task/create', payload);
+      const newTask = data;
+      setTasks((prev) => [...prev, newTask]);
+      setOpen(false);
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   return (

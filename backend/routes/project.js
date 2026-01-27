@@ -7,7 +7,6 @@ const router = Router();
 router.get("/", requireAuth, async (req, res) => {
   try {
     const projects = await prisma.project.findMany();
-    console.log(projects);
     return res.send(projects);
   } catch (err) {
     console.log(err);

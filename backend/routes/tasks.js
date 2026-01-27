@@ -83,8 +83,18 @@ router.post("/create", requireAuth, async (req, res) => {
           project: { connect: { id: finalProjectId } },
         },
         include: {
-          project: true,
-          createdBy: true,
+          createdBy: {
+            select: {
+              id: true,
+              name: true,
+            },
+          },
+          project: {
+            select: {
+              id: true,
+              name: true,
+            },
+          },
         },
       });
     });

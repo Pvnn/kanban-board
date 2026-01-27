@@ -28,14 +28,17 @@ export const Dashboard = () => {
     fetchProjects();
   }, [])
   const todoTasks = tasks.filter((task) => task.status == "TODO");
+  const devTasks = tasks.filter((task) => task.status == "DEVELOPMENT");
+  const testTasks = tasks.filter((task) => task.status == "TESTING");
+  const doneTasks = tasks.filter((task) => task.status == "DONE");
   return (
     <div className="min-h-screen px-10 py-8 bg-white">
-      <h1>Dashboard for {user.email}</h1>
+      <h1>Dashboard for {user.name}</h1>
       <div className="flex justify-between">
         <BoardSection title="Todo" color="gray" tasks={todoTasks} plus={true} projects={projects} setTasks={setTasks} />
-        <BoardSection title="Development" color="cyan" tasks={[]} projects={projects} />
-        <BoardSection title="Testing" color="purple" tasks={[]} projects={projects} />
-        <BoardSection title="Done" color="green" tasks={[]} projects={projects} />
+        <BoardSection title="Development" color="cyan" tasks={devTasks} projects={projects} />
+        <BoardSection title="Testing" color="purple" tasks={testTasks} projects={projects} />
+        <BoardSection title="Done" color="green" tasks={doneTasks} projects={projects} />
       </div>
     </div>
   );

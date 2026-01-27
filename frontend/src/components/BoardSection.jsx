@@ -2,7 +2,6 @@ import { useState } from "react";
 import { TaskCard } from "../components/TaskCard";
 import { Icon } from "../ui/Icon.jsx";
 import { CreateTaskModal } from "./CreateTaskModal.jsx";
-import { formatDate } from "../utils/date.js";
 
 export const BoardSection = ({ title, color, tasks, setTasks, plus, projects }) => {
   const [isCreateTaskModalOpen, setIsCreateTaskModalOpen] = useState(false);
@@ -60,11 +59,8 @@ export const BoardSection = ({ title, color, tasks, setTasks, plus, projects }) 
           {tasks.map((task) => (
             <TaskCard
               key={task.title}
+              task={task}
               icon={<Icon name="Palette" />}
-              title={task.title}
-              postedBy={task.createdBy.name}
-              project={task.project.name}
-              postedOn={formatDate(task.createdAt)}
             />
           ))}
         </div>

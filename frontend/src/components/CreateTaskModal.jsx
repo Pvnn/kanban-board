@@ -112,14 +112,14 @@ export const CreateTaskModal = ({ setOpen, projects = [], setTasks }) => {
         {/* Actions */}
         <div className="flex justify-end gap-2 pt-2">
           <button
-            className="px-4 py-2 text-sm rounded-xl bg-gray-100 hover:bg-gray-200 transition"
+            className="cursor-pointer px-4 py-2 text-sm rounded-xl bg-gray-100 hover:bg-gray-200 transition"
             onClick={() => setOpen(false)}
           >
             Cancel
           </button>
 
           <button
-            className="px-4 py-2 text-sm rounded-xl bg-gray-900 text-white hover:bg-gray-800 transition"
+            className="cursor-pointer px-4 py-2 text-sm rounded-xl bg-gray-900 text-white hover:bg-gray-800 transition"
             onClick={handleSubmit}
           >
             Post

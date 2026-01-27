@@ -4,7 +4,7 @@ import { Icon } from "../ui/Icon.jsx";
 import { CreateTaskModal } from "./CreateTaskModal.jsx";
 import { formatDate } from "../utils/date.js";
 
-export const BoardSection = ({ title, color, tasks, plus }) => {
+export const BoardSection = ({ title, color, tasks, plus, projects }) => {
   const [isCreateTaskModalOpen, setIsCreateTaskModalOpen] = useState(false);
   const colorStyles = {
     gray: {
@@ -72,7 +72,7 @@ export const BoardSection = ({ title, color, tasks, plus }) => {
       </div>
       {
         isCreateTaskModalOpen && (
-          <CreateTaskModal setOpen={setIsCreateTaskModalOpen} />
+          <CreateTaskModal setOpen={setIsCreateTaskModalOpen} projects={projects} />
         )
       }
     </>

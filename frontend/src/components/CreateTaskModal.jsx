@@ -18,8 +18,8 @@ export const CreateTaskModal = ({ setOpen, projects = [] }) => {
       title,
       description,
       project: newProject
-        ? { name: projectName, description: projectDescription }
-        : { id: projectId },
+        ? { projectName, projectDescription }
+        : { projectId },
     };
 
     console.log(payload);

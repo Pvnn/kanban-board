@@ -1,17 +1,24 @@
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../auth/AuthContext";
 import { BoardSection } from "../components/BoardSection.jsx";
+import axios from "axios";
+
 export const Dashboard = () => {
   const { user } = useContext(AuthContext);
-  const todoTasks = [
-    {
-      title: "Create visuals for feature",
-      icon: "Palette",
-      postedBy: "Ben Lang",
-      project: "Ally",
-      postedOn: "December 25, 2025",
-    },
-  ];
+  const [tasks, setTasks] = useState([]);
+  useEffect(() => {
+    const fetchTasks = async () => {
+      try {
+        const { data } = await axios.get('/api/task/');
+        setTasks(data);
+        console.log(data);
+      } catch (err) {
+        console.log(err);
+      }
+    }
+    fetchTasks();
+  }, [])
+  const todoTasks = tasks.filter((task) => task.status == "TODO");
   return (
     <div className="min-h-screen px-10 py-8 bg-white">
       <h1>Dashboard for {user.email}</h1>

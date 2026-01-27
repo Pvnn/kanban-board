@@ -9,16 +9,15 @@ export const AuthProvider = ({ children }) => {
     user: null,
   });
 
-  // Explicit action: used after login / logout
   const refreshAuth = async () => {
     try {
       const response = await axios.get("/auth/protected");
-      const { id, email } = response.data;
+      const { id, email, name } = response.data;
 
       setAuth({
         loading: false,
         authenticated: true,
-        user: { id, email },
+        user: { id, email, name },
       });
     } catch {
       setAuth({
@@ -29,20 +28,20 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // Initial auth check (effect owns the async work)
+
   useEffect(() => {
     let cancelled = false;
 
     const checkAuthOnLoad = async () => {
       try {
         const response = await axios.get("/auth/protected");
-        const { id, email } = response.data;
+        const { id, email, name } = response.data;
 
         if (!cancelled) {
           setAuth({
             loading: false,
             authenticated: true,
-            user: { id, email },
+            user: { id, email, name },
           });
         }
       } catch {

@@ -7,10 +7,12 @@ import requireAuth from "../auth/requireAuth.js";
 const router = Router();
 
 router.post("/register", async (req, res) => {
-  const { email, password } = req.body;
+  const { name, email, password } = req.body;
 
-  if (!email || !password)
-    return res.status(400).json({ error: "Email and password are required" });
+  if (!name || !email || !password)
+    return res
+      .status(400)
+      .json({ error: "Name, email and password are required" });
 
   const exists = (await prisma.user.findUnique({ where: { email } }))
     ? true
@@ -21,12 +23,13 @@ router.post("/register", async (req, res) => {
 
   const user = await prisma.user.create({
     data: {
+      name,
       email,
       password: hash,
     },
   });
 
-  return res.status(201).json({ id: user.id, email });
+  return res.status(201).json({ id: user.id, email, name });
 });
 
 router.post("/login", async (req, res) => {
@@ -60,6 +63,7 @@ router.get("/protected", requireAuth, (req, res) => {
   res.json({
     id: req.user.id,
     email: req.user.email,
+    name: req.user.name,
   });
 });
 

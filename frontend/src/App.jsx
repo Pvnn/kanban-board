@@ -3,6 +3,7 @@ import { LoginPage } from "./pages/LoginPage.jsx";
 import { ProtectedRute } from "./auth/ProtectedRoute.jsx";
 import { PublicRoute } from "./auth/PublicRoute.jsx";
 import { Dashboard } from "./pages/Dashboard.jsx";
+import { RegisterPage } from "./pages/RegisterPage.jsx";
 import "./App.css";
 
 function App() {
@@ -11,6 +12,7 @@ function App() {
       {/* Public routes */}
       <Route element={<PublicRoute />}>
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<RegisterPage />} />
       </Route>
 
       {/* Protected routes */}

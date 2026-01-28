@@ -2,9 +2,20 @@ import { Icon } from "../ui/Icon";
 import { AuthContext } from "../auth/AuthContext";
 import { useContext } from "react";
 import { formatDate } from "../utils/date";
+import axios from "axios"
 
-export const TaskDetailModal = ({ task, setOpen }) => {
+export const TaskDetailModal = ({ task, setOpen, setTasks }) => {
   const { user } = useContext(AuthContext);
+  const handleDelete = async () => {
+    try {
+      await axios.delete(`/api/task/${task.id}`);
+      setTasks((prev) => prev.filter((t) => t.id != task.id));
+      setOpen(false);
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
   return (
     <>
       <div
@@ -22,6 +33,12 @@ export const TaskDetailModal = ({ task, setOpen }) => {
         <div className="mt-6 border-t border-gray-100">
           <dl className="divide-y divide-gray-100">
             <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+              <dt className="text-sm/6 font-medium text-gray-900">Description</dt>
+              <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">
+                {task.description}
+              </dd>
+            </div>
+            <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
               <dt className="text-sm/6 font-medium text-gray-900">Project</dt>
               <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">{task.project.name}</dd>
             </div>
@@ -32,12 +49,6 @@ export const TaskDetailModal = ({ task, setOpen }) => {
             <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
               <dt className="text-sm/6 font-medium text-gray-900">Created on</dt>
               <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">{formatDate(task.createdAt)}</dd>
-            </div>
-            <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-              <dt className="text-sm/6 font-medium text-gray-900">Description</dt>
-              <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">
-                {task.description}
-              </dd>
             </div>
           </dl>
         </div>
@@ -62,7 +73,7 @@ export const TaskDetailModal = ({ task, setOpen }) => {
           {task && task.createdBy.id === user.id && (
             <button
               className="cursor-pointer px-4 py-2 text-sm rounded-xl bg-gray-900 text-white hover:bg-gray-800 transition"
-              onClick={() => console.log("Deleted")}
+              onClick={handleDelete}
             >
               Delete
             </button>

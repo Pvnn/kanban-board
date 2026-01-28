@@ -2,7 +2,7 @@ import { formatDate } from "../utils/date";
 import { TaskDetailModal } from "./TaskDetailModal";
 import { useState } from "react";
 
-export const TaskCard = ({ task, icon }) => {
+export const TaskCard = ({ task, icon, setTasks }) => {
   const [isOpen, setIsOpen] = useState(false);
   return (
     <>
@@ -16,7 +16,7 @@ export const TaskCard = ({ task, icon }) => {
         <div className="text-xs">{formatDate(task.createdAt)}</div>
       </div>
       {isOpen && (
-        <TaskDetailModal setOpen={setIsOpen} task={task} />
+        <TaskDetailModal setOpen={setIsOpen} task={task} setTasks={setTasks} />
       )}
     </>
 

@@ -61,6 +61,7 @@ export const BoardSection = ({ title, color, tasks, setTasks, plus, projects }) 
               key={task.title}
               task={task}
               icon={<Icon name="Palette" />}
+              setTasks={setTasks}
             />
           ))}
         </div>

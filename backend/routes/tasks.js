@@ -163,4 +163,79 @@ router.post("/takeup/:taskId", requireAuth, async (req, res) => {
   }
 });
 
+router.post("/setTest/:taskId", requireAuth, async (req, res) => {
+  const { taskId } = req.params;
+  const userId = req.user.id;
+  if (!taskId) {
+    return res.status(400).json({ error: "Task id is required." });
+  }
+  try {
+    const updatedTasks = await prisma.task.updateManyAndReturn({
+      where: {
+        id: taskId,
+        createdByUserId: { not: userId },
+        assignedToUserId: { not: null },
+      },
+      data: {
+        status: "TESTING",
+      },
+      include: {
+        project: true,
+        createdBy: true,
+        assignedTo: true,
+      },
+    });
+    if (updatedTasks.length === 0) {
+      return res.status(400).json({
+        error: "Task not found",
+      });
+    }
+
+    const updatedTask = updatedTasks[0];
+
+    return res.status(200).json({ updatedTask: updatedTask });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ error: "Failed to update the task" });
+  }
+});
+
+router.post("/setDone/:taskId", requireAuth, async (req, res) => {
+  const { taskId } = req.params;
+  const userId = req.user.id;
+  if (!taskId) {
+    return res.status(400).json({ error: "Task id is required." });
+  }
+  try {
+    const updatedTasks = await prisma.task.updateManyAndReturn({
+      where: {
+        id: taskId,
+        createdByUserId: { not: userId },
+        assignedToUserId: { not: null },
+      },
+      data: {
+        status: "DONE",
+        completedAt: new Date(),
+      },
+      include: {
+        project: true,
+        createdBy: true,
+        assignedTo: true,
+      },
+    });
+    if (updatedTasks.length === 0) {
+      return res.status(400).json({
+        error: "Task not found",
+      });
+    }
+
+    const updatedTask = updatedTasks[0];
+
+    return res.status(200).json({ updatedTask: updatedTask });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ error: "Failed to update the task" });
+  }
+});
+
 export default router;

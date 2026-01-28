@@ -36,9 +36,9 @@ export const Dashboard = () => {
       <h1>Dashboard for {user.name}</h1>
       <div className="flex justify-between">
         <BoardSection title="Todo" color="gray" tasks={todoTasks} plus={true} projects={projects} setTasks={setTasks} />
-        <BoardSection title="Development" color="cyan" tasks={devTasks} projects={projects} />
-        <BoardSection title="Testing" color="purple" tasks={testTasks} projects={projects} />
-        <BoardSection title="Done" color="green" tasks={doneTasks} projects={projects} />
+        <BoardSection title="Development" color="cyan" tasks={devTasks} projects={projects} setTasks={setTasks} />
+        <BoardSection title="Testing" color="purple" tasks={testTasks} projects={projects} setTasks={setTasks} />
+        <BoardSection title="Done" color="green" tasks={doneTasks} projects={projects} setTasks={setTasks} />
       </div>
     </div>
   );

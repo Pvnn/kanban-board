@@ -33,6 +33,7 @@ model Task {
   createdByUserId  String
   project          Project    @relation(fields: [projectId], references: [id])
   projectId        String
+  updatedAt        DateTime?  @updatedAt
 }
 
 model Project {

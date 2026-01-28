@@ -31,21 +31,46 @@ export const TaskDetailModal = ({ task, setOpen, setTasks }) => {
     }
   };
 
+  const handleSetTest = async () => {
+    try {
+      const { data: { updatedTask } } =
+        await axios.post(`/api/task/setTest/${task.id}`);
+
+      setTasks(prev =>
+        prev.map(t => (t.id === updatedTask.id ? updatedTask : t))
+      );
+      setOpen(false);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const handleSetDone = async () => {
+    try {
+      const { data: { updatedTask } } =
+        await axios.post(`/api/task/setDone/${task.id}`);
+
+      setTasks(prev =>
+        prev.map(t => (t.id === updatedTask.id ? updatedTask : t))
+      );
+      setOpen(false);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   return (
     <>
-      {/* Backdrop */}
       <div
         className="fixed inset-0 bg-gray-900/50 z-40"
         onClick={() => setOpen(false)}
       />
 
-      {/* Modal */}
       <div
         className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2
                    z-50 w-full max-w-2xl p-7 bg-white rounded-2xl shadow-lg
                    space-y-7"
       >
-        {/* Header */}
         <div className="flex justify-between items-start">
           <h2 className="text-lg font-semibold leading-snug">
             {task.title}
@@ -57,7 +82,6 @@ export const TaskDetailModal = ({ task, setOpen, setTasks }) => {
           />
         </div>
 
-        {/* Project + Description */}
         <div className="space-y-4">
           <div>
             <p className="text-xs font-medium uppercase tracking-wide opacity-60">
@@ -78,7 +102,6 @@ export const TaskDetailModal = ({ task, setOpen, setTasks }) => {
           </div>
         </div>
 
-        {/* Meta info */}
         <div className="grid grid-cols-2 gap-x-8 gap-y-5 text-sm">
           <div>
             <p className="text-xs font-medium uppercase tracking-wide opacity-60">
@@ -120,7 +143,7 @@ export const TaskDetailModal = ({ task, setOpen, setTasks }) => {
           {task.status !== "DEVELOPMENT" && (
             <button
               className="px-4 py-2 text-sm rounded-xl bg-gray-100
-                       hover:bg-gray-200 transition"
+                       hover:bg-gray-200 transition cursor-pointer"
               onClick={() => setOpen(false)}
             >
               Cancel
@@ -128,21 +151,21 @@ export const TaskDetailModal = ({ task, setOpen, setTasks }) => {
           )}
 
 
-          {task.createdBy.id !== user.id && task.status === "DEVELOPMENT" && (
+          {task.assignedTo && task.assignedTo.id == user.id && task.createdBy.id !== user.id && task.status === "DEVELOPMENT" && (
             <button
               className="px-4 py-2 text-sm rounded-xl bg-gray-100
-                       hover:bg-gray-200 transition"
-              onClick={() => { }}
+                       hover:bg-gray-200 transition cursor-pointer"
+              onClick={handleSetTest}
             >
               Move to Test
             </button>
           )}
 
-          {task.createdBy.id !== user.id && (task.status === "DEVELOPMENT" || task.status === "TESTING") && (
+          {task.assignedTo && task.assignedTo.id == user.id && task.createdBy.id !== user.id && (task.status === "DEVELOPMENT" || task.status === "TESTING") && (
             <button
               className="px-4 py-2 text-sm rounded-xl bg-gray-900
-                         text-white hover:bg-gray-800 transition"
-              onClick={() => { }}
+                         text-white hover:bg-gray-800 transition cursor-pointer"
+              onClick={handleSetDone}
             >
               Move to Done
             </button>
@@ -151,7 +174,7 @@ export const TaskDetailModal = ({ task, setOpen, setTasks }) => {
           {task.createdBy.id !== user.id && task.status === "TODO" && (
             <button
               className="px-4 py-2 text-sm rounded-xl bg-gray-900
-                         text-white hover:bg-gray-800 transition"
+                         text-white hover:bg-gray-800 transition cursor-pointer"
               onClick={handleTakeup}
             >
               Take up
@@ -161,7 +184,7 @@ export const TaskDetailModal = ({ task, setOpen, setTasks }) => {
           {task.createdBy.id === user.id && task.status === "TODO" && (
             <button
               className="px-4 py-2 text-sm rounded-xl bg-gray-900
-                         text-white hover:bg-gray-800 transition"
+                         text-white hover:bg-gray-800 transition cursor-pointer"
               onClick={handleDelete}
             >
               Delete

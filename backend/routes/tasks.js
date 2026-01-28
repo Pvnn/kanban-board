@@ -158,6 +158,7 @@ router.post("/takeup/:taskId", requireAuth, async (req, res) => {
       data: {
         status: "DEVELOPMENT",
         assignedToUserId: userId,
+        takenUpAt: new Date(),
       },
     });
     if (result.count === 0) {

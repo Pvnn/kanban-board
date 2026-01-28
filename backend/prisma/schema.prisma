@@ -27,6 +27,8 @@ model Task {
   createdBy        User       @relation("CreatedTasks", fields: [createdByUserId], references: [id])
   assignedTo       User?      @relation("AssignedTasks", fields: [assignedToUserId], references: [id])
   createdAt        DateTime   @default(now())
+  takenUpAt        DateTime?
+  completedAt      DateTime?
   assignedToUserId String?
   createdByUserId  String
   project          Project    @relation(fields: [projectId], references: [id])

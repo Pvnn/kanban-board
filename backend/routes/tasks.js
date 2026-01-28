@@ -8,18 +8,9 @@ router.get("/", requireAuth, async (req, res) => {
   try {
     const tasks = await prisma.task.findMany({
       include: {
-        createdBy: {
-          select: {
-            id: true,
-            name: true,
-          },
-        },
-        project: {
-          select: {
-            id: true,
-            name: true,
-          },
-        },
+        createdBy: true,
+        project: true,
+        assignedTo: true,
       },
     });
     return res.send(tasks);
@@ -83,18 +74,9 @@ router.post("/create", requireAuth, async (req, res) => {
           project: { connect: { id: finalProjectId } },
         },
         include: {
-          createdBy: {
-            select: {
-              id: true,
-              name: true,
-            },
-          },
-          project: {
-            select: {
-              id: true,
-              name: true,
-            },
-          },
+          createdBy: true,
+          project: true,
+          assignedTo: true,
         },
       });
     });
@@ -149,7 +131,7 @@ router.post("/takeup/:taskId", requireAuth, async (req, res) => {
     return res.status(400).json({ error: "Task id is required." });
   }
   try {
-    const result = await prisma.task.updateMany({
+    const updatedTasks = await prisma.task.updateManyAndReturn({
       where: {
         id: taskId,
         createdByUserId: { not: userId },
@@ -160,13 +142,21 @@ router.post("/takeup/:taskId", requireAuth, async (req, res) => {
         assignedToUserId: userId,
         takenUpAt: new Date(),
       },
+      include: {
+        project: true,
+        createdBy: true,
+        assignedTo: true,
+      },
     });
-    if (result.count === 0) {
+    if (updatedTasks.length === 0) {
       return res.status(400).json({
         error: "Task not found or you cannot take up your own task",
       });
     }
-    return res.status(200).json({ message: "Task taken up successfully" });
+
+    const updatedTask = updatedTasks[0];
+
+    return res.status(200).json({ updatedTask: updatedTask });
   } catch (err) {
     console.log(err);
     res.status(500).json({ error: "Failed to take up the task" });

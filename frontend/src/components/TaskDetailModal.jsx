@@ -9,12 +9,25 @@ export const TaskDetailModal = ({ task, setOpen, setTasks }) => {
   const handleDelete = async () => {
     try {
       await axios.delete(`/api/task/${task.id}`);
-      setTasks((prev) => prev.filter((t) => t.id != task.id));
+      setTasks((prev) => prev.filter((t) => t.id !== task.id));
       setOpen(false);
     } catch (err) {
       console.log(err);
     }
   }
+
+  const handleTakeup = async () => {
+    try {
+      const { data: { updatedTask } } = await axios.post(`/api/task/takeup/${task.id}`);
+
+      setTasks(prev =>
+        prev.map(t => (t.id === updatedTask.id ? updatedTask : t))
+      );
+      setOpen(false);
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   return (
     <>
@@ -62,15 +75,15 @@ export const TaskDetailModal = ({ task, setOpen, setTasks }) => {
           >
             Cancel
           </button>
-          {task && task.createdBy.id != user.id && task.status === "TODO" && (
+          {task && task.createdBy.id !== user.id && task.status === "TODO" && (
             <button
               className="cursor-pointer px-4 py-2 text-sm rounded-xl bg-gray-900 text-white hover:bg-gray-800 transition"
-              onClick={() => console.log("Clicked")}
+              onClick={handleTakeup}
             >
               Take up
             </button>
           )}
-          {task && task.createdBy.id === user.id && (
+          {task && task.createdBy.id === user.id && task.status === "TODO" && (
             <button
               className="cursor-pointer px-4 py-2 text-sm rounded-xl bg-gray-900 text-white hover:bg-gray-800 transition"
               onClick={handleDelete}

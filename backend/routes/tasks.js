@@ -116,4 +116,60 @@ router.post("/create", requireAuth, async (req, res) => {
   }
 });
 
+router.delete("/:taskId", requireAuth, async (req, res) => {
+  const { taskId } = req.params;
+  const userId = req.user.id;
+  if (!taskId) {
+    return res.status(400).json({ error: "Task id required" });
+  }
+  try {
+    const result = await prisma.task.deleteMany({
+      where: {
+        id: taskId,
+        createdByUserId: userId,
+      },
+    });
+
+    if (result.count === 0) {
+      return res.status(404).json({ error: "Task not found" });
+    }
+    return res
+      .status(200)
+      .json({ message: `Task ${taskId} deleted successfully.` });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({ error: "Failed to delete task" });
+  }
+});
+
+router.post("/takeup/:taskId", requireAuth, async (req, res) => {
+  const { taskId } = req.params;
+  const userId = req.user.id;
+  if (!taskId) {
+    return res.status(400).json({ error: "Task id is required." });
+  }
+  try {
+    const result = await prisma.task.updateMany({
+      where: {
+        id: taskId,
+        createdByUserId: { not: userId },
+        assignedToUserId: null,
+      },
+      data: {
+        status: "DEVELOPMENT",
+        assignedToUserId: userId,
+      },
+    });
+    if (result.count === 0) {
+      return res.status(400).json({
+        error: "Task not found or you cannot take up your own task",
+      });
+    }
+    return res.status(200).json({ message: "Task taken up successfully" });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ error: "Failed to take up the task" });
+  }
+});
+
 export default router;

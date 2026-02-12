@@ -32,9 +32,9 @@ export const BoardSection = ({ title, color, tasks, setTasks, plus, projects }) 
 
   return (
     <>
-      <div className="h-150 w-80 flex flex-col p-3 m-5 items-center">
+      <div className="h-150 w-70 flex flex-col p-3 m-5 items-center">
         <div
-          className={`${styles.bg} w-80 py-1 m-5 px-3 rounded-lg flex justify-between items-center`}
+          className={`${styles.bg} w-70 py-1 m-5 px-3 rounded-lg flex justify-between items-center`}
         >
           <div className="flex items-center gap-5">
             <div
@@ -55,7 +55,7 @@ export const BoardSection = ({ title, color, tasks, setTasks, plus, projects }) 
 
         </div>
 
-        <div className={`${styles.bg} h-150 w-80 rounded-lg`}>
+        <div className={`${styles.bg} h-150 w-70 rounded-lg`}>
           {tasks.map((task) => (
             <TaskCard
               key={task.title}

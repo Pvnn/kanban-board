@@ -1,6 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../auth/AuthContext";
 import { BoardSection } from "../components/BoardSection.jsx";
+import { LeftNav } from "../components/LeftNav.jsx";
 import axios from "axios";
 
 export const Dashboard = () => {
@@ -32,14 +33,16 @@ export const Dashboard = () => {
   const testTasks = tasks.filter((task) => task.status == "TESTING");
   const doneTasks = tasks.filter((task) => task.status == "DONE");
   return (
-    <div className="min-h-screen px-10 py-8 bg-white">
-      <h1>Dashboard for {user.name}</h1>
-      <div className="flex justify-between">
-        <BoardSection title="Todo" color="gray" tasks={todoTasks} plus={true} projects={projects} setTasks={setTasks} />
-        <BoardSection title="Development" color="cyan" tasks={devTasks} projects={projects} setTasks={setTasks} />
-        <BoardSection title="Testing" color="purple" tasks={testTasks} projects={projects} setTasks={setTasks} />
-        <BoardSection title="Done" color="green" tasks={doneTasks} projects={projects} setTasks={setTasks} />
-      </div>
+    <div className="min-h-screen bg-slate-50 flex">
+      <LeftNav user={user} />
+      <main className="px-7 py-8">
+        <div className="flex justify-between">
+          <BoardSection title="Todo" color="gray" tasks={todoTasks} plus={true} projects={projects} setTasks={setTasks} />
+          <BoardSection title="Development" color="cyan" tasks={devTasks} projects={projects} setTasks={setTasks} />
+          <BoardSection title="Testing" color="purple" tasks={testTasks} projects={projects} setTasks={setTasks} />
+          <BoardSection title="Done" color="green" tasks={doneTasks} projects={projects} setTasks={setTasks} />
+        </div>
+      </main>
     </div>
   );
 };

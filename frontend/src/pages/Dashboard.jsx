@@ -1,48 +1,30 @@
-import { useContext, useEffect, useState } from "react";
-import { AuthContext } from "../auth/AuthContext";
-import { BoardSection } from "../components/BoardSection.jsx";
 import { LeftNav } from "../components/LeftNav.jsx";
-import axios from "axios";
+import { useContext } from "react";
+import { AuthContext } from "../auth/AuthContext.jsx";
+import { StatCard } from "../components/StatCard.jsx";
 
 export const Dashboard = () => {
   const { user } = useContext(AuthContext);
-  const [tasks, setTasks] = useState([]);
-  const [projects, setProjects] = useState([]);
-  useEffect(() => {
-    const fetchTasks = async () => {
-      try {
-        const { data } = await axios.get('/api/task/');
-        setTasks(data);
-      } catch (err) {
-        console.log(err);
-      }
-    }
-    const fetchProjects = async () => {
-      try {
-        const { data } = await axios.get('/api/project/');
-        setProjects(data);
-      } catch (err) {
-        console.log(err);
-      }
-    }
-    fetchTasks();
-    fetchProjects();
-  }, [])
-  const todoTasks = tasks.filter((task) => task.status == "TODO");
-  const devTasks = tasks.filter((task) => task.status == "DEVELOPMENT");
-  const testTasks = tasks.filter((task) => task.status == "TESTING");
-  const doneTasks = tasks.filter((task) => task.status == "DONE");
   return (
     <div className="min-h-screen bg-slate-50 flex">
       <LeftNav user={user} />
-      <main className="px-7 py-8">
-        <div className="flex justify-between">
-          <BoardSection title="Todo" color="gray" tasks={todoTasks} plus={true} projects={projects} setTasks={setTasks} />
-          <BoardSection title="Development" color="cyan" tasks={devTasks} projects={projects} setTasks={setTasks} />
-          <BoardSection title="Testing" color="purple" tasks={testTasks} projects={projects} setTasks={setTasks} />
-          <BoardSection title="Done" color="green" tasks={doneTasks} projects={projects} setTasks={setTasks} />
+      <main className="px-7 py-8 w-full max-w-6xl">
+        <div className="mb-6">
+          <h1 className="text-2xl font-semibold">
+            Hey, {user?.name}
+          </h1>
+          <p className="text-gray-500">
+            Here's your current status
+          </p>
+        </div>
+        <div className="grid grid-cols-4 gap-5">
+          <StatCard value={6} label="You Owe" />
+          <StatCard value={4} label="Owed To You" />
+          <StatCard value={3} label="Active Tasks" />
+          <StatCard value={5} label="Completed" />
         </div>
       </main>
     </div>
   );
-};
+}
+

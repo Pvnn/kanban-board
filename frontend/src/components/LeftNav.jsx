@@ -1,4 +1,5 @@
 import { Icon } from "../ui/Icon.jsx";
+import { NavLink } from "react-router";
 
 export const LeftNav = () => {
   return (
@@ -8,18 +9,18 @@ export const LeftNav = () => {
           TaskB.
         </div>
         <div className="h-30 flex justify-between flex-col my-40 mx-8">
-          <div className="flex items-center gap-2 cursor-pointer">
+          <NavLink to="/" className="flex items-center gap-2 cursor-pointer">
             <Icon name="House"></Icon>
             <span>Dashboard</span>
-          </div>
-          <div className="flex items-center gap-2 cursor-pointer">
+          </NavLink>
+          <NavLink to="/tasks" className="flex items-center gap-2 cursor-pointer">
             <Icon name="CircleCheckBig"></Icon>
             <span>Task Board</span>
-          </div>
-          <div className="flex items-center gap-2 cursor-pointer">
+          </NavLink>
+          <NavLink to="/profile" className="flex items-center gap-2 cursor-pointer">
             <Icon name="UserRound"></Icon>
             <span>Profile</span>
-          </div>
+          </NavLink>
         </div>
       </div>
 

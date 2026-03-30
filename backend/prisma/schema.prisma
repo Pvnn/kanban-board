@@ -9,31 +9,34 @@ datasource db {
 }
 
 model User {
-  id              String    @id @default(uuid())
-  email           String    @unique
+  id              String            @id @default(uuid())
+  email           String            @unique
   name            String
   password        String
-  assignedTasks   Task[]    @relation("AssignedTasks")
-  createdTasks    Task[]    @relation("CreatedTasks")
-  createdAt       DateTime  @default(now())
+  assignedTasks   Task[]            @relation("AssignedTasks")
+  createdTasks    Task[]            @relation("CreatedTasks")
+  createdAt       DateTime          @default(now())
   createdProjects Project[]
+  debtGiven       DebtTransaction[] @relation("DebtFrom")
+  debtReceived    DebtTransaction[] @relation("DebtTo")
 }
 
 model Task {
-  id               String     @id @default(uuid())
+  id               String            @id @default(uuid())
   title            String
   description      String
-  status           TaskStatus @default(TODO)
-  createdBy        User       @relation("CreatedTasks", fields: [createdByUserId], references: [id])
-  assignedTo       User?      @relation("AssignedTasks", fields: [assignedToUserId], references: [id])
-  createdAt        DateTime   @default(now())
+  status           TaskStatus        @default(TODO)
+  createdBy        User              @relation("CreatedTasks", fields: [createdByUserId], references: [id])
+  assignedTo       User?             @relation("AssignedTasks", fields: [assignedToUserId], references: [id])
+  createdAt        DateTime          @default(now())
   takenUpAt        DateTime?
   completedAt      DateTime?
   assignedToUserId String?
   createdByUserId  String
-  project          Project    @relation(fields: [projectId], references: [id])
+  project          Project           @relation(fields: [projectId], references: [id])
   projectId        String
-  updatedAt        DateTime?  @updatedAt
+  updatedAt        DateTime?         @updatedAt
+  debtTransactions DebtTransaction[]
 }
 
 model Project {
@@ -44,6 +47,19 @@ model Project {
   createdBy   User     @relation(fields: [userId], references: [id])
   tasks       Task[]
   userId      String
+}
+
+model DebtTransaction {
+  id       String @id @default(uuid())
+  fromUser User   @relation("DebtFrom", fields: [fromUserId], references: [id])
+  toUser   User   @relation("DebtTo", fields: [toUserId], references: [id])
+  amount   Int    @default(1)
+  task     Task   @relation(fields: [taskId], references: [id])
+
+  createdAt  DateTime @default(now())
+  fromUserId String
+  toUserId   String
+  taskId     String
 }
 
 enum TaskStatus {

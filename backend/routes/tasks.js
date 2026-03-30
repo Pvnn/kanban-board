@@ -207,34 +207,52 @@ router.post("/setDone/:taskId", requireAuth, async (req, res) => {
     return res.status(400).json({ error: "Task id is required." });
   }
   try {
-    const updatedTasks = await prisma.task.updateManyAndReturn({
-      where: {
-        id: taskId,
-        createdByUserId: { not: userId },
-        assignedToUserId: { not: null },
-      },
-      data: {
-        status: "DONE",
-        completedAt: new Date(),
-      },
-      include: {
-        project: true,
-        createdBy: true,
-        assignedTo: true,
-      },
-    });
-    if (updatedTasks.length === 0) {
-      return res.status(400).json({
-        error: "Task not found",
+    const result = await prisma.$transaction(async (tx) => {
+      const updatedTasks = await tx.task.updateManyAndReturn({
+        where: {
+          id: taskId,
+          createdByUserId: { not: userId },
+          assignedToUserId: userId,
+          status: { not: "DONE" },
+        },
+        data: {
+          status: "DONE",
+          completedAt: new Date(),
+        },
+        include: {
+          project: true,
+          createdBy: true,
+          assignedTo: true,
+        },
       });
-    }
 
-    const updatedTask = updatedTasks[0];
+      if (updatedTasks.length === 0) {
+        throw new Error("Task not found or not allowed");
+      }
 
-    return res.status(200).json({ updatedTask: updatedTask });
+      const updatedTask = updatedTasks[0];
+      let newDebtTransaction = null;
+
+      if (updatedTask.createdByUserId !== updatedTask.assignedToUserId) {
+        try {
+          newDebtTransaction = await tx.debtTransaction.create({
+            data: {
+              fromUserId: updatedTask.createdByUserId,
+              toUserId: updatedTask.assignedToUserId,
+              taskId: updatedTask.id,
+            },
+          });
+        } catch (err) {
+          console.log("Debt transaction creation failed:", err.message);
+        }
+      }
+
+      return { updatedTask, newDebtTransaction };
+    });
+    return res.status(200).json(result);
   } catch (err) {
     console.log(err);
-    res.status(500).json({ error: "Failed to update the task" });
+    return res.status(500).json({ error: "Failed to update the task" });
   }
 });
 

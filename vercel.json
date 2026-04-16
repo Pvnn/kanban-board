@@ -4,6 +4,6 @@
     { "source": "/auth/(.*)", "destination": "/api/index.js" },
     { "source": "/((?!api|auth).*)", "destination": "/frontend/dist/index.html" }
   ],
-  "buildCommand": "cd backend && npm install && cd ../frontend && npm install && npm run build",
+  "buildCommand": "cd backend && npm ci && cd ../frontend && npm ci && npm run build",
   "outputDirectory": "frontend/dist"
 }

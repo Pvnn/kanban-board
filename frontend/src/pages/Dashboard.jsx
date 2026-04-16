@@ -89,7 +89,7 @@ export const Dashboard = () => {
           <StatCard
             label="Open Requests"
             value={payload.tasks.filter(t =>
-              t.createdByUserId === currentUserId && !t.assignedToUserId
+              t.createdByUserId === currentUserId && t.status === 'TODO'
             ).length}
           />
         </div>

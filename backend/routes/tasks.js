@@ -277,8 +277,8 @@ router.post("/setDone/:taskId", requireAuth, async (req, res) => {
         try {
           newDebtTransaction = await tx.debtTransaction.create({
             data: {
-              fromUserId: updatedTask.createdByUserId,
-              toUserId: updatedTask.assignedToUserId,
+              fromUserId: updatedTask.assignedToUserId, // The Helper (Assignee)
+              toUserId: updatedTask.createdByUserId, // The Receiver (Creator)
               taskId: updatedTask.id,
             },
           });

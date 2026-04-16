@@ -27,8 +27,8 @@ export const Dashboard = () => {
 
   if (!payload) {
     return (
-      <div className="min-h-screen bg-white flex items-center justify-center text-gray-500">
-        Loading dashboard...
+      <div className="h-screen overflow-hidden bg-white flex text-gray-900">
+        <LeftNav user={user} />
       </div>
     );
   }
@@ -61,10 +61,10 @@ export const Dashboard = () => {
   });
 
   return (
-    <div className="min-h-screen bg-white flex text-gray-900">
+    <div className="h-screen overflow-hidden bg-white flex text-gray-900">
       <LeftNav user={user} />
 
-      <main className="px-8 py-10 w-full max-w-7xl mx-auto flex flex-col gap-10">
+      <main className="flex-1 min-h-0 px-8 py-10 w-full max-w-7xl mx-auto flex flex-col gap-10">
         <div>
           <h1 className="text-3xl font-bold">
             Hey, {user?.name || "User"}
@@ -74,23 +74,29 @@ export const Dashboard = () => {
 
         {/* Stats Grid */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-          <StatCard label="You Owe" value={payload.totalDebt} />
-          <StatCard label="Owed To You" value={payload.totalOwed} />
           <StatCard
-            label="Net Debt Balance"
+            label="Contribution Balance"
             value={payload.netDebt}
             isWarning={payload.netDebt > 0}
           />
           <StatCard label="Active Tasks" value={payload.tasks.length} />
+          <StatCard
+            label="Completed Work"
+            value={payload.activity.filter(a => a.type === 'DEBT_CLEARED').length}
+          />
+          <StatCard
+            label="Tasks Taken Up"
+            value={payload.activity.filter(a => a.type === 'TAKEN_UP').length}
+          />
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 flex-1 min-h-0 pb-6">
 
           {/* Active Tasks */}
-          <div className="lg:col-span-2 flex flex-col gap-4">
-            <h2 className="text-lg font-semibold border-b border-gray-200 pb-2">Your Active Work</h2>
+          <div className="lg:col-span-2 flex flex-col gap-4 min-h-0">
+            <h2 className="text-lg font-semibold border-b border-gray-200 pb-2 shrink-0">Your Active Work</h2>
 
-            <div className="flex flex-col gap-3">
+            <div className="flex flex-col gap-3 flex-1 overflow-y-auto pr-2 pb-4">
               {uiTasks.length === 0 ? (
                 <div className="bg-gray-50 border border-gray-100 border-dashed rounded-xl p-8 text-center text-sm text-gray-500">
                   You have no active tasks right now
@@ -104,9 +110,9 @@ export const Dashboard = () => {
           </div>
 
           {/* Debt Section */}
-          <div className="flex flex-col gap-4">
-            <h2 className="text-lg font-semibold border-b border-gray-200 pb-2">Activity Ledger</h2>
-            <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
+          <div className="flex flex-col gap-4 min-h-0">
+            <h2 className="text-lg font-semibold border-b border-gray-200 pb-2 shrink-0">Activity Ledger</h2>
+            <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm flex-1 overflow-y-auto">
               <ul className="space-y-6">
                 {uiActivity.length === 0 ? (
                   <div className="text-center text-sm text-gray-400 py-4">

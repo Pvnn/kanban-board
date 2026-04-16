@@ -35,12 +35,12 @@ export const TaskBoard = () => {
   return (
     <div className="min-h-screen bg-white flex">
       <LeftNav user={user} />
-      <main className="px-7 py-8">
-        <div className="flex justify-between">
-          <BoardSection title="Todo" color="gray" tasks={todoTasks} plus={true} projects={projects} setTasks={setTasks} />
-          <BoardSection title="Development" color="cyan" tasks={devTasks} projects={projects} setTasks={setTasks} />
-          <BoardSection title="Testing" color="purple" tasks={testTasks} projects={projects} setTasks={setTasks} />
-          <BoardSection title="Done" color="green" tasks={doneTasks} projects={projects} setTasks={setTasks} />
+      <main className="flex-1 px-8 py-8 w-full overflow-x-auto h-screen">
+        <div className="flex gap-6 items-stretch h-full pb-4">
+          <BoardSection title="Todo" color="gray" tasks={todoTasks} plus={true} projects={projects} setTasks={setTasks} user={user} />
+          <BoardSection title="Development" color="cyan" tasks={devTasks} projects={projects} setTasks={setTasks} user={user} />
+          <BoardSection title="Testing" color="purple" tasks={testTasks} projects={projects} setTasks={setTasks} user={user} />
+          <BoardSection title="Done" color="green" tasks={doneTasks} projects={projects} setTasks={setTasks} user={user} />
         </div>
       </main>
     </div>

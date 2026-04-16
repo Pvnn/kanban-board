@@ -35,7 +35,7 @@ export const LeftNav = () => {
             <Icon name="CircleCheckBig"></Icon>
             <span>Task Board</span>
           </NavLink>
-          <NavLink to="/profile" className="flex items-center gap-2 cursor-pointer">
+          <NavLink to="/" className="flex items-center gap-2 cursor-pointer">
             <Icon name="UserRound"></Icon>
             <span>Profile</span>
           </NavLink>

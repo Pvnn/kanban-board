@@ -1,11 +1,9 @@
-import { useContext } from "react";
 import axios from "axios";
 import { Icon } from "../ui/Icon";
-import { AuthContext } from "../auth/AuthContext";
 import { formatDate } from "../utils/date";
 
-export const TaskDetailModal = ({ task, setOpen, setTasks }) => {
-  const { user } = useContext(AuthContext);
+export const TaskDetailModal = ({ task, setOpen, setTasks, user }) => {
+
 
   const handleDelete = async () => {
     try {
@@ -107,7 +105,7 @@ export const TaskDetailModal = ({ task, setOpen, setTasks }) => {
             <p className="text-xs font-medium uppercase tracking-wide opacity-60">
               Posted by
             </p>
-            <p className="mt-1">{task.createdBy.name}</p>
+            <p className="mt-1">{task.createdBy.name == user.name ? "You" : `${task.createdBy.name}`}</p>
           </div>
 
           <div>
@@ -123,7 +121,7 @@ export const TaskDetailModal = ({ task, setOpen, setTasks }) => {
                 <p className="text-xs font-medium uppercase tracking-wide opacity-60">
                   Taken up by
                 </p>
-                <p className="mt-1">{task.assignedTo.name}</p>
+                <p className="mt-1">{task.assignedTo.name == user.name ? "You" : `${task.assignedTo.name}`}</p>
               </div>
 
               <div>

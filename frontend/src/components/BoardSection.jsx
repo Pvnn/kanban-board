@@ -3,7 +3,7 @@ import { TaskCard } from "../components/TaskCard";
 import { Icon } from "../ui/Icon.jsx";
 import { CreateTaskModal } from "./CreateTaskModal.jsx";
 
-export const BoardSection = ({ title, color, tasks, setTasks, plus, projects }) => {
+export const BoardSection = ({ title, color, tasks, setTasks, plus, projects, user }) => {
   const [isCreateTaskModalOpen, setIsCreateTaskModalOpen] = useState(false);
   const colorStyles = {
     gray: {
@@ -32,36 +32,30 @@ export const BoardSection = ({ title, color, tasks, setTasks, plus, projects }) 
 
   return (
     <>
-      <div className="h-150 w-70 flex flex-col p-3 m-5 items-center">
-        <div
-          className={`${styles.bg} w-70 py-1 m-5 px-3 rounded-lg flex justify-between items-center`}
-        >
-          <div className="flex items-center gap-5">
-            <div
-              className={`${styles.pill} font-semibold py-1 px-2 rounded-full text-sm text-gray-800`}
-            >
+      <div className="flex flex-col w-75 shrink-0 h-full">
+        <div className={`${styles.bg} py-2 px-3 rounded-lg flex justify-between items-center mb-3`}>
+          <div className="flex items-center gap-3">
+            <div className={`${styles.pill} font-semibold py-1 px-2 rounded-md text-xs text-gray-800`}>
               {title}
             </div>
-            <div className={`${styles.text} text-sm`}>{tasks.length}</div>
+            <div className={`${styles.text} text-xs font-medium`}>{tasks.length}</div>
           </div>
 
           {plus && (
-            <div className="text text-end">
-              <button className="cursor-pointer" onClick={() => setIsCreateTaskModalOpen(true)}>
-                <Icon name="Plus" />
-              </button>
-            </div>
+            <button className="cursor-pointer hover:bg-gray-200/50 p-1 rounded-md transition-colors" onClick={() => setIsCreateTaskModalOpen(true)}>
+              <Icon name="Plus" />
+            </button>
           )}
-
         </div>
 
-        <div className={`${styles.bg} h-150 w-70 rounded-lg`}>
+        <div className={`${styles.bg} rounded-xl flex-1 p-4 flex flex-col gap-3 overflow-y-auto`}>
           {tasks.map((task) => (
             <TaskCard
-              key={task.title}
+              key={task.id}
               task={task}
               icon={<Icon name="Palette" />}
               setTasks={setTasks}
+              user={user}
             />
           ))}
         </div>

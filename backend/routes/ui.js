@@ -30,7 +30,10 @@ router.get("/dashboard", requireAuth, async (req, res) => {
     // Compute Active Tasks
     const activeTasksPromise = prisma.task.findMany({
       where: {
-        assignedToUserId: userId,
+        OR: [
+          { assignedToUserId: userId },
+          { createdByUserId: userId, status: "TODO" },
+        ],
         status: { not: "DONE" },
       },
       orderBy: {

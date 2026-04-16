@@ -33,14 +33,16 @@ export const Dashboard = () => {
     );
   }
 
-  const uiTasks = payload.tasks.map(task => ({
-    id: task.id,
-    title: task.title,
-    description: task.description,
-    status: task.status,
-    time: timeAgo(task.takenUpAt || task.createdAt),
-    assignee: task.assignedToUserId === currentUserId ? "You" : "Assigned"
-  }));
+  const uiTasks = payload.tasks
+    .filter(task => task.assignedToUserId === currentUserId)
+    .map(task => ({
+      id: task.id,
+      title: task.title,
+      description: task.description,
+      status: task.status,
+      time: timeAgo(task.takenUpAt || task.createdAt),
+      assignee: task.assignedToUserId === currentUserId ? "You" : "Assigned"
+    }));
 
   const uiActivity = payload.activity.map((log) => {
     let dotColor = "bg-gray-400";
@@ -79,7 +81,7 @@ export const Dashboard = () => {
             value={payload.netDebt}
             isWarning={payload.netDebt > 0}
           />
-          <StatCard label="Active Tasks" value={payload.tasks.length} />
+          <StatCard label="Active Tasks" value={uiTasks.length} />
           <StatCard
             label="Favors Completed"
             value={payload.activity.filter(a =>

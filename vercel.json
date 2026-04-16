@@ -6,22 +6,8 @@
       "framework": "vite"
     },
     "backend": {
-      "entrypoint": "backend",
+      "entrypoint": "backend/index.js",
       "routePrefix": "/api"
     }
-  },
-  "rewrites": [
-    {
-      "source": "/api/(.*)",
-      "destination": "backend/index.js"
-    },
-    {
-      "source": "/auth/(.*)",
-      "destination": "backend/index.js"
-    },
-    {
-      "source": "/((?!api|auth).*)",
-      "destination": "/index.html"
-    }
-  ]
+  }
 }

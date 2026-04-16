@@ -13,7 +13,7 @@ router.get("/dashboard", requireAuth, async (req, res) => {
         amount: true,
       },
       where: {
-        fromUserId: userId,
+        toUserId: userId,
       },
     });
 
@@ -23,7 +23,7 @@ router.get("/dashboard", requireAuth, async (req, res) => {
         amount: true,
       },
       where: {
-        toUserId: userId,
+        fromUserId: userId,
       },
     });
 
@@ -33,25 +33,29 @@ router.get("/dashboard", requireAuth, async (req, res) => {
         assignedToUserId: userId,
         status: { not: "DONE" },
       },
-      take: 5,
       orderBy: {
         createdAt: "desc",
       },
     });
 
     //Retrieve Recent Activity
-    const recentActivityPromise = prisma.debtTransaction.findMany({
+    const recentActivityPromise = prisma.activityLog.findMany({
       where: {
-        OR: [{ fromUserId: userId }, { toUserId: userId }],
+        task: {
+          OR: [{ createdByUserId: userId }, { assignedToUserId: userId }],
+        },
       },
       orderBy: {
         createdAt: "desc",
       },
-      take: 5,
-      select: {
-        fromUser: true,
-        toUser: true,
-        task: true,
+      take: 6,
+      include: {
+        actor: {
+          select: { id: true, name: true, email: true },
+        },
+        task: {
+          select: { id: true, title: true },
+        },
       },
     });
 

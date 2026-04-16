@@ -33,7 +33,7 @@ export const TaskBoard = () => {
   const testTasks = tasks.filter((task) => task.status == "TESTING");
   const doneTasks = tasks.filter((task) => task.status == "DONE");
   return (
-    <div className="min-h-screen bg-slate-50 flex">
+    <div className="min-h-screen bg-white flex">
       <LeftNav user={user} />
       <main className="px-7 py-8">
         <div className="flex justify-between">

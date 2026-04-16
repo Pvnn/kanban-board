@@ -62,8 +62,31 @@ export const AuthProvider = ({ children }) => {
     };
   }, []);
 
+  const logout = async () => {
+    try {
+      const response = await axios.post('/auth/logout');
+      if (response.status == 200) {
+        setAuth({
+          loading: false,
+          authenticated: false,
+          user: null,
+        });
+        return true;
+      } else {
+        return false
+      }
+    } catch (error) {
+      if (error.response && error.response.status === 401) {
+        setAuth({ loading: false, authenticated: false, user: null });
+        return true;
+      }
+      console.error("Logout failed:", error);
+      return false;
+    }
+  }
+
   return (
-    <AuthContext.Provider value={{ ...auth, refreshAuth }}>
+    <AuthContext.Provider value={{ ...auth, refreshAuth, logout }}>
       {children}
     </AuthContext.Provider>
   );

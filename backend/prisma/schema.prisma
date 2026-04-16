@@ -19,6 +19,7 @@ model User {
   createdProjects Project[]
   debtGiven       DebtTransaction[] @relation("DebtFrom")
   debtReceived    DebtTransaction[] @relation("DebtTo")
+  activityLogs    ActivityLog[]
 }
 
 model Task {
@@ -37,6 +38,7 @@ model Task {
   projectId        String
   updatedAt        DateTime?         @updatedAt
   debtTransactions DebtTransaction[]
+  activityLogs     ActivityLog[]
 }
 
 model Project {
@@ -54,12 +56,31 @@ model DebtTransaction {
   fromUser User   @relation("DebtFrom", fields: [fromUserId], references: [id])
   toUser   User   @relation("DebtTo", fields: [toUserId], references: [id])
   amount   Int    @default(1)
-  task     Task   @relation(fields: [taskId], references: [id])
+  task     Task   @relation(fields: [taskId], references: [id], onDelete: Cascade)
 
   createdAt  DateTime @default(now())
   fromUserId String
   toUserId   String
   taskId     String
+}
+
+model ActivityLog {
+  id        String       @id @default(uuid())
+  type      ActivityType
+  message   String
+  createdAt DateTime     @default(now())
+
+  task    Task   @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  taskId  String
+  actor   User   @relation(fields: [actorId], references: [id])
+  actorId String
+}
+
+enum ActivityType {
+  CREATED
+  TAKEN_UP
+  STATUS_UPDATED
+  DEBT_CLEARED
 }
 
 enum TaskStatus {

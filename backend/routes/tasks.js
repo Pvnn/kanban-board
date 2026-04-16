@@ -5,18 +5,33 @@ import prisma from "../db/prisma.js";
 const router = Router();
 
 router.get("/", requireAuth, async (req, res) => {
+  const userId = req.user.id;
   try {
     const tasks = await prisma.task.findMany({
+      where: {
+        OR: [
+          { status: "TODO" },
+          { createdByUserId: userId },
+          { assignedToUserId: userId },
+        ],
+      },
       include: {
-        createdBy: true,
+        createdBy: {
+          select: { id: true, name: true, email: true },
+        },
+        assignedTo: {
+          select: { id: true, name: true, email: true },
+        },
         project: true,
-        assignedTo: true,
+      },
+      orderBy: {
+        createdAt: "desc",
       },
     });
     return res.send(tasks);
   } catch (err) {
     console.log(err);
-    return res.status(500).json({ error: "Task creation failed" });
+    return res.status(500).json({ error: "Task fetching failed" });
   }
 });
 
@@ -65,7 +80,7 @@ router.post("/create", requireAuth, async (req, res) => {
         throw new Error("PROJECT_REQUIRED");
       }
 
-      return tx.task.create({
+      const newTask = await tx.task.create({
         data: {
           title,
           description,
@@ -73,12 +88,19 @@ router.post("/create", requireAuth, async (req, res) => {
           createdBy: { connect: { id: userId } },
           project: { connect: { id: finalProjectId } },
         },
-        include: {
-          createdBy: true,
-          project: true,
-          assignedTo: true,
+        include: { createdBy: true, project: true, assignedTo: true },
+      });
+
+      await tx.activityLog.create({
+        data: {
+          type: "CREATED",
+          message: "created this task",
+          taskId: newTask.id,
+          actorId: userId,
         },
       });
+
+      return newTask;
     });
 
     res.status(201).json(task);
@@ -156,6 +178,15 @@ router.post("/takeup/:taskId", requireAuth, async (req, res) => {
 
     const updatedTask = updatedTasks[0];
 
+    await prisma.activityLog.create({
+      data: {
+        type: "TAKEN_UP",
+        message: "took up this task",
+        taskId: updatedTask.id,
+        actorId: userId,
+      },
+    });
+
     return res.status(200).json({ updatedTask: updatedTask });
   } catch (err) {
     console.log(err);
@@ -192,6 +223,15 @@ router.post("/setTest/:taskId", requireAuth, async (req, res) => {
     }
 
     const updatedTask = updatedTasks[0];
+
+    await prisma.activityLog.create({
+      data: {
+        type: "STATUS_UPDATED",
+        message: "moved task to TESTING",
+        taskId: updatedTask.id,
+        actorId: userId,
+      },
+    });
 
     return res.status(200).json({ updatedTask: updatedTask });
   } catch (err) {
@@ -246,6 +286,15 @@ router.post("/setDone/:taskId", requireAuth, async (req, res) => {
           console.log("Debt transaction creation failed:", err.message);
         }
       }
+
+      await tx.activityLog.create({
+        data: {
+          type: "DEBT_CLEARED",
+          message: "completed the task",
+          taskId: updatedTask.id,
+          actorId: userId,
+        },
+      });
 
       return { updatedTask, newDebtTransaction };
     });

@@ -20,6 +20,11 @@ app.get("/api/health", (request, response) => {
   return response.status(200).send({ status: "healthy" });
 });
 
-app.listen(PORT, () => {
-  console.log(`Server listening on PORT ${PORT}`);
-});
+// Only listen locally
+if (process.env.NODE_ENV !== "production") {
+  const PORT = process.env.PORT || 3000;
+  app.listen(PORT, () => console.log(`Server listeniing on port ${PORT}`));
+}
+
+// Export the app for Vercel's serverless environment
+export default app;

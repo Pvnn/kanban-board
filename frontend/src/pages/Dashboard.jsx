@@ -81,12 +81,16 @@ export const Dashboard = () => {
           />
           <StatCard label="Active Tasks" value={payload.tasks.length} />
           <StatCard
-            label="Completed Work"
-            value={payload.activity.filter(a => a.type === 'DEBT_CLEARED').length}
+            label="Favors Completed"
+            value={payload.activity.filter(a =>
+              a.type === 'DEBT_CLEARED' && a.actorId === currentUserId
+            ).length}
           />
           <StatCard
-            label="Tasks Taken Up"
-            value={payload.activity.filter(a => a.type === 'TAKEN_UP').length}
+            label="Open Requests"
+            value={payload.tasks.filter(t =>
+              t.createdByUserId === currentUserId && !t.assignedToUserId
+            ).length}
           />
         </div>
 

@@ -1,18 +1,9 @@
 {
   "rewrites": [
-    {
-      "source": "/api/(.*)",
-      "destination": "/backend/index.js"
-    },
-    {
-      "source": "/auth/(.*)",
-      "destination": "/backend/index.js"
-    },
-    {
-      "source": "/((?!api|auth).*)",
-      "destination": "/frontend/dist/index.html"
-    }
+    { "source": "/api/(.*)", "destination": "/backend/index.js" },
+    { "source": "/auth/(.*)", "destination": "/backend/index.js" },
+    { "source": "/((?!api|auth).*)", "destination": "/frontend/dist/index.html" }
   ],
-  "buildCommand": "cd frontend && npm install && npm run build",
+  "buildCommand": "cd backend && npm install && cd ../frontend && npm install && npm run build",
   "outputDirectory": "frontend/dist"
 }
